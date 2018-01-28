@@ -1,0 +1,47 @@
+###########################################################################
+# Initial Konfiguration
+# Wlanthermo 2.6.0
+# Image vom 26.02.2017
+#
+# Standard Hostname                   wlanthermo 
+# Standard Passwort für pi            raspberry
+# Standard User/ Passwort für WebGUI  wlanthermo / raspberry
+# 
+# Nur ausgefuellte Werte werden gesetzt
+# Die Variablennamen duerfen nicht veraendert werden!
+#
+# Ein Logfile wird unter /boot/setup.log angelegt 
+###########################################################################
+# Hostname:
+piname=
+
+# pi Passwort: (aktiviert ssh)
+pipass=
+# root Passwort: (kein root Login per SSH und Passwort!)
+rootpass=
+
+# webgui Passwort:
+webguipw=
+
+# WLAN Netzwerkname:
+wlanssid=
+# WLAN Schluessel:
+wlankey=
+
+# setup.txt nach boot loeschen(leer lassen)? Oder 1 fuer behalten 
+keepconf=
+
+# Groesse der Partition in Prozent (nicht unter 2GB!, nur die Zahl kein % Zeichen!)
+partsize=
+
+# Hardwareversion (v1, v2, v3, miniV2)
+hwversion=v3
+# Displayupdate erzwingen (leer für nicht, 1 für ja)
+force_update=
+
+# Sprache (de, en, fr)
+language=de
+# Tastaturbelegung (de, gb, us, fr)
+keyboard=de
+# Zeitzone (tzdata)
+timezone=Europe/Berlin
