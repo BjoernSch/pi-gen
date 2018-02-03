@@ -313,7 +313,7 @@ case "\$1" in
   start)
     log_daemon_msg "Starting resize2fs_once" &&
     resize2fs /dev/$ROOT_PART &&
-    update-rc.d resize2fs_once remove &&
+    systemctl disable resize2fs_once.service &&
     /sbin/dphys-swapfile setup &&
     rm /etc/init.d/resize2fs_once &&
     rm /root/resize.sh &&
@@ -328,8 +328,9 @@ EOF
 service WLANThermoNEXTION stop
 display_message "Partition resize..."
 
-  chmod +x /etc/init.d/resize2fs_once &&
-  update-rc.d resize2fs_once defaults &&
+  chmod +x /etc/init.d/resize2fs_once&&
+  systemctl daemon-reload 
+  systemctl enable resize2fs_once.service &&
 
   echo
   echo "Done"
