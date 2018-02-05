@@ -1,7 +1,7 @@
 ###########################################################################
 # Initial Konfiguration
-# Wlanthermo 2.6.0
-# Image vom 26.02.2017
+# WLANThermo XXX_VERSION_XXX
+# Image vom XXX_DATE_XXX
 #
 # Standard Hostname                   wlanthermo 
 # Standard Passwort für pi            raspberry
