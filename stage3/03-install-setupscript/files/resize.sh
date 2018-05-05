@@ -44,6 +44,7 @@ function display_message {
 function enable_ssh {
   systemctl enable ssh.service
   systemctl start ssh.service
+  ssh_enabled=1
 }
 
 #crontab richtigstellen
@@ -100,6 +101,27 @@ if [ -e /boot/setup.txt ]; then
   echo "Zeitzone:"
   echo $timezone
   
+  echo
+  echo "------------------------------------------------------"
+  echo "Update display"
+  echo "------------------------------------------------------"
+
+  # Rotate display by 180 degree on miniV2
+  if [ "$hwversion" == "miniV2" ]; then
+     echo "Display orientation 180°"
+     orientation=180
+  else
+     echo "Display orientation 0°"
+     orientation=0
+  fi
+
+  # Display Update Check
+  if [ -e /var/www/tmp/nextionupdate ] || [ -n "$force_update" ]; then
+    echo "Display update starting $(date +"%R %x")"
+    /usr/sbin/wlt_2_updatenextion.sh /usr/share/WLANThermo/nextion/ $orientation > /var/www/tmp/error.txt
+    echo "Display update finished $(date +"%R %x")"
+  fi
+
   # Set language
   case "$language" in
     "en")
@@ -160,15 +182,6 @@ if [ -e /boot/setup.txt ]; then
     echo "Hostname gesetzt"
   fi
 
-  # pi pass setzen
-  if [ -n "$pipass" ]; then           #wenn nicht ""
-    display_message "pi Passwort setzen"
-    enable_ssh
-    sleep 0.5
-    echo "pi:$pipass" | chpasswd
-    echo "Passwort pi gesetzt"
-  fi
-
   # authorized_keys kopieren
   if [ -e /boot/authorized_keys ]; then
     display_message "Copying authorized_keys (pi)"
@@ -196,11 +209,33 @@ if [ -e /boot/setup.txt ]; then
   #root pass setzen
   if [ -n "$rootpass" ]; then         #wenn nicht ""
     display_message "Setting root password"
+    enable_ssh
     sleep 0.5
     echo "root:$rootpass" | chpasswd
     echo "Passwort root gesetzt"
+  elif [ -n "$ssh_enabled" ]; then
+    rootpass = $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c10)
+    display_message "Setting random root password"
+    sleep 0.5
+    echo "root:$rootpass" | chpasswd
+    echo "Passwort root gesetzt: $rootpass"
   fi
-
+  
+  # pi pass setzen
+  if [ -n "$pipass" ]; then           #wenn nicht ""
+    display_message "pi Passwort setzen"
+    enable_ssh
+    sleep 0.5
+    echo "pi:$pipass" | chpasswd
+    echo "Passwort pi gesetzt"
+  elif [ -n "$ssh_enabled" ]; then
+    pipass = $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c10)
+    display_message "Setting random pi password"
+    sleep 0.5
+    echo "pi:$pipass" | chpasswd
+    echo "Passwort pi gesetzt: $pipass"
+  fi
+  
   # wlanthermo pass setzen
   if [ -n "$webguipw" ]; then         #wenn nicht ""
     display_message "Setting web password"
@@ -336,28 +371,6 @@ display_message "Partition resize..."
   echo "Done"
 fi
 ifup wlan0
-
-echo
-echo "------------------------------------------------------"
-echo "Update display"
-echo "------------------------------------------------------"
-
-# Rotate display by 180 degree on miniV2
-if [ "$hwversion" == "miniV2" ]; then
-   echo "Display orientation 180°"
-   orientation=180
-else
-   echo "Display orientation 0°"
-   orientation=0
-fi
-
-
-# Display Update Check
-if [ -e /var/www/tmp/nextionupdate ] || [ -n "$force_update" ]; then
-   echo "Display update starting $(date +"%R %x")"
-   /usr/sbin/wlt_2_updatenextion.sh /usr/share/WLANThermo/nextion/ $orientation > /var/www/tmp/error.txt
-   echo "Display update finished $(date +"%R %x")"
-fi
 
 
 if [ -n "$hwversion" ]; then
