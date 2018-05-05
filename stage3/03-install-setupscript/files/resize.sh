@@ -182,6 +182,15 @@ if [ -e /boot/setup.txt ]; then
     echo "Hostname gesetzt"
   fi
 
+  # pi pass setzen
+  if [ -n "$pipass" ]; then           #wenn nicht ""
+    display_message "pi Passwort setzen"
+    enable_ssh
+    sleep 0.5
+    echo "pi:$pipass" | chpasswd
+    echo "Passwort pi gesetzt"
+  fi
+
   # authorized_keys kopieren
   if [ -e /boot/authorized_keys ]; then
     display_message "Copying authorized_keys (pi)"
@@ -235,7 +244,7 @@ if [ -e /boot/setup.txt ]; then
     echo "pi:$pipass" | chpasswd
     echo "Passwort pi gesetzt: $pipass"
   fi
-  
+
   # wlanthermo pass setzen
   if [ -n "$webguipw" ]; then         #wenn nicht ""
     display_message "Setting web password"
@@ -371,7 +380,6 @@ display_message "Partition resize..."
   echo "Done"
 fi
 ifup wlan0
-
 
 if [ -n "$hwversion" ]; then
   display_message "Setting hardware version"
