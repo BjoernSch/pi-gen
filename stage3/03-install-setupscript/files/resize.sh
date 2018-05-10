@@ -223,7 +223,7 @@ if [ -e /boot/setup.txt ]; then
     echo "root:$rootpass" | chpasswd
     echo "Passwort root gesetzt"
   elif [ -n "$ssh_enabled" ]; then
-    rootpass = $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c10)
+    rootpass=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c10)
     display_message "Setting random root password"
     sleep 0.5
     echo "root:$rootpass" | chpasswd
@@ -238,7 +238,7 @@ if [ -e /boot/setup.txt ]; then
     echo "pi:$pipass" | chpasswd
     echo "Passwort pi gesetzt"
   elif [ -n "$ssh_enabled" ]; then
-    pipass = $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c10)
+    pipass=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c10)
     display_message "Setting random pi password"
     sleep 0.5
     echo "pi:$pipass" | chpasswd
