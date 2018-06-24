@@ -120,6 +120,8 @@ if [ -e /boot/setup.txt ]; then
     echo "Display update starting $(date +"%R %x")"
     /usr/sbin/wlt_2_updatenextion.sh /usr/share/WLANThermo/nextion/ $orientation > /var/www/tmp/error.txt
     echo "Display update finished $(date +"%R %x")"
+    # Re-init display to show configuration messages....
+    init_display
   fi
 
   # Set language
