@@ -155,7 +155,7 @@ if [ -e /boot/setup.txt ]; then
   if [ -n "$timezone" ]; then
     display_message "Setting Timezone $timezone"
     if [ -f "/usr/share/zoneinfo/$timezone" ]; then
-      cp "/usr/share/zoneinfo/$timezone" /etc/localtime
+      ln -sf "/usr/share/zoneinfo/$timezone" /etc/localtime
       echo "$timezone" > /etc/timezone
       dpkg-reconfigure -f noninteractive tzdata
       sleep 0.5
