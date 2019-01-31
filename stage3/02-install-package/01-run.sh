@@ -9,7 +9,7 @@ wget -O /etc/apt/sources.list.d/wlanthermo-stretch.list https://packages.wlanthe
 
 apt update
 
-dpkg -i /tmp/wlanthermo-*.deb
+dpkg --force-depends -i /tmp/wlanthermo-*.deb
 rm -f /tmp/wlanthermo-*.deb
 
 apt -yf install
