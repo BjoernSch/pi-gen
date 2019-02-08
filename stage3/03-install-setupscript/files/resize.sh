@@ -100,6 +100,8 @@ if [ -e /boot/setup.txt ]; then
   echo $keyboard
   echo "Zeitzone:"
   echo $timezone
+  echo "WLAN Domain:"
+  echo $wlan_regdomain
   
   echo
   echo "------------------------------------------------------"
@@ -254,6 +256,13 @@ if [ -e /boot/setup.txt ]; then
     htpasswd -b /etc/lighttpd/htpasswd wlanthermo $webguipw
     echo "Passwort webgui gesetzt"
   fi
+  
+  # WLAN country setzen
+  if [ -n "$wlan_regdomain" ]; then
+    display_message "Setting WLAN regulatory country"
+    sed -i /var/www/conf/WLANThermo.conf -e "s/^wlan_regdomain[[:space:]]*=.*/wlan_regdomain = $wlan_regdomain/"
+    sleep 0.5
+  fi
 
   # wlan Netz und Key eintragen
   if [ -n "$wlanssid" ]; then         #wenn nicht ""
@@ -262,7 +271,11 @@ if [ -e /boot/setup.txt ]; then
       sleep 0.5
       echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" > /etc/wpa_supplicant/wpa_supplicant.conf
       echo "update_config=1" >> /etc/wpa_supplicant/wpa_supplicant.conf
-
+      if [ -n "$wlan_regdomain" ]; then
+          echo "country=$wlan_regdomain"
+      else
+          echo "country=00"
+      fi
       wpa_passphrase $wlanssid $wlankey >> /etc/wpa_supplicant/wpa_supplicant.conf
       ifdown wlan0
       echo "WLAN SSID and passphrase set"
@@ -298,9 +311,6 @@ if [ -n "$partsize"  ]; then         #wenn nicht ""
     PARTTEMP=$(expr $PART_END \* 100)          # Shift für Ganzzahlen
     PARTTEMP=$(expr $PARTTEMP \* $partsize)    # Prozent der Größe angeben
     PART_END=$(expr $PARTTEMP / 10000)         # Auf den richtigen Wert
-echo Debug PART_END $PART_END
-echo Debug partsize $partsize
-echo Debug PARTTEMP $PARTTEMP
   fi
 fi
 
@@ -385,7 +395,7 @@ ifup wlan0
 
 if [ -n "$hwversion" ]; then
   display_message "Setting hardware version"
-  sed -i /var/www/conf/WLANThermo.conf -e "s/^version = .*/version = $hwversion/"
+  sed -i /var/www/conf/WLANThermo.conf -e "s/^version[[:space:]]*=.*/version = $hwversion/"
   sleep 0.5
 fi
 

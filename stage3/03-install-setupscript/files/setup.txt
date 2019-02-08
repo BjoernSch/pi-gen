@@ -45,3 +45,5 @@ language=de
 keyboard=de
 # Zeitzone (tzdata)
 timezone=Europe/Berlin
+# Land für WLAN Regularien (DE, GB, US, etc)
+wlan_regdomain=DE
